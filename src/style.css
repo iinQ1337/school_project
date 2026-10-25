@@ -24,7 +24,6 @@
   --body-wght: 410;
   /* подобрано по Figma: ширина подписи 806px, переносы абзацев как в макете */
   --body-tracking: 1.34px;
-  --lead-tracking: 1.65px;
   --ring-tracking: 1.3px;
   --fact-value-wdth: 132;
   --fact-unit-tracking: -2.6px;
@@ -317,8 +316,39 @@ button * {
   z-index: 4;
 }
 
-/* Лид (36:515) */
-.hero__lead,
+/* Описание (36:515) — колонка слева от фото ворот. Крупнее макета (16px не читались
+   на маленьких мониторах) и чуть уже по ширине шрифта, чтобы уместить оба абзаца.
+   Ширина — до левого края фото (руина выступает до x ≈ 403); кегль подбирает
+   main.js — самый крупный, при котором текст не выходит за низ экрана */
+.hero__text {
+  position: absolute;
+  left: 0;
+  top: 612px;
+  z-index: 6;
+  width: 380px;
+}
+
+.hero__lead {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--hero-lead-size, 20px);
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" 125;
+  letter-spacing: 0.04em;
+  line-height: 1.32;
+  color: #b7b7b7;
+}
+
+.hero__lead + .hero__lead {
+  margin-top: 0.9em;
+}
+
+.hero__lead em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* Подпись к фото (36:516) */
 .hero__caption {
   position: absolute;
   margin: 0;
@@ -329,30 +359,6 @@ button * {
   letter-spacing: var(--body-tracking);
   line-height: 19px;
   color: var(--color-muted);
-}
-
-.hero__lead {
-  left: 0;
-  top: 612px;
-  z-index: 6;
-  width: 455px;
-  letter-spacing: var(--lead-tracking);
-}
-
-/* второй абзац истории — под лидом, отступ 24px как между абзацами в макете;
-   уже лида, потому что ниже фото ворот выступает влево (руина башни с x ≈ 645) */
-.hero__lead--more {
-  top: 731px;
-  width: 390px;
-}
-
-.hero__lead em {
-  font-style: normal;
-  color: var(--color-accent);
-}
-
-/* Подпись к фото (36:516) */
-.hero__caption {
   left: 630px;
   top: 992px;
   z-index: 7;
@@ -432,7 +438,10 @@ button * {
   top: 725px;
 }
 
-/* Frame 9 (41:607): карта со скотчем */
+/* Frame 9 (41:607): карта со скотчем.
+   Крупнее макета на 12 %: масштабируется весь блок вместе с метками, поэтому они
+   остаются на своих местах карты. Точка опоры подобрана так, чтобы бумага встала
+   между текстом слева (до x ≈ 656) и краем сцены, а скотч — ниже меню (y ≈ 150) */
 .forts {
   position: absolute;
   left: 707px;
@@ -440,6 +449,8 @@ button * {
   width: 834.287px;
   height: 880px;
   margin: 0;
+  transform: scale(1.12);
+  transform-origin: 857px 473px;
 }
 
 .forts__map {
@@ -564,6 +575,8 @@ button * {
   border-radius: 50%;
   background: none;
   -webkit-tap-highlight-color: transparent;
+  /* метка — ссылка на страницу форта */
+  display: block;
 }
 
 .fort:focus-visible {

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Форт — Форты Брестской крепости</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/fort.css" />
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+  </head>
+  <body class="fort-body">
+    <!-- то же меню, что на главной; ведёт на её экраны -->
+    <header class="site-nav" data-theme="light">
+      <nav class="site-nav__stage" aria-label="Разделы">
+        <a class="site-nav__link site-nav__link--1" href="../#citadel">цитадель</a>
+        <a class="site-nav__link site-nav__link--2 is-active" href="../#first-ring" aria-current="true">первое кольцо</a>
+        <a class="site-nav__link site-nav__link--3" href="../#letter-forts">литерные форты</a>
+        <a class="site-nav__link site-nav__link--4" href="../#y1915">1915</a>
+        <a class="site-nav__link site-nav__link--5" href="../#y1941">1941</a>
+      </nav>
+    </header>
+
+    <!-- Страница форта — одна на все девять: содержимое подставляет fort-page.js
+         по ?n=1…9 из src/forts.js. Ниже — каркас с текстом форта I на случай без JS -->
+    <main>
+      <section class="screen fort-page" data-theme="light">
+        <div class="screen__stage">
+          <img class="fort-page__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
+
+          <div class="fort-page__col fort-page__col--text">
+            <header class="fort-page__head">
+              <p class="fort-page__kicker"><span>форт первого кольца</span></p>
+              <h1 class="fort-page__title">
+                <span class="visually-hidden">Форт </span><span class="fort-page__numeral" data-field="numeral">I</span>
+              </h1>
+              <p class="fort-page__place"><span data-field="place">у деревни Козловичи</span></p>
+            </header>
+            <p class="fort-page__history" data-field="history"></p>
+            <section class="fort-page__now" aria-labelledby="fort-now">
+              <h2 class="fort-page__now-title" id="fort-now">сейчас</h2>
+              <p class="fort-page__now-text" data-field="now"></p>
+            </section>
+          </div>
+
+          <div class="fort-page__col fort-page__col--media">
+            <figure class="fort-page__card">
+              <div class="fort-page__photo" data-field="photo-frame">
+                <img data-field="photo" alt="" />
+              </div>
+              <div class="fort-page__tape fort-page__tape--left" aria-hidden="true">
+                <img src="/assets/tape.png" alt="" width="467" height="350" />
+              </div>
+              <div class="fort-page__tape fort-page__tape--right" aria-hidden="true">
+                <img src="/assets/tape.png" alt="" width="467" height="350" />
+              </div>
+              <figcaption class="fort-page__credit" data-field="credit"></figcaption>
+            </figure>
+
+            <dl class="fort-page__facts" data-field="facts"></dl>
+          </div>
+
+          <nav class="fort-page__switch" aria-label="Форты первого кольца">
+            <a class="fort-page__back" href="../#first-ring">← к карте фортов</a>
+            <div class="fort-page__list" data-field="list"></div>
+          </nav>
+
+          <p class="fort-page__source">
+            по материалам Википедии: «Форты и оборонительная линия Брестской крепости», «Форт I–IV (Брест-Литовск)»
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/fort-page.js"></script>
+  </body>
+</html>

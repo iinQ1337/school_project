@@ -284,7 +284,9 @@ function initPager() {
     window.scrollTo(0, screens[index].offsetTop);
   });
 
-  setIndex(nearest());
+  // пришли по ссылке с якорем (например, «к карте фортов» со страницы форта) — на этот экран
+  const fromHash = screens.findIndex((s) => s.id && `#${s.id}` === window.location.hash);
+  setIndex(fromHash >= 0 ? fromHash : nearest());
   window.scrollTo(0, screens[index].offsetTop);
 }
 

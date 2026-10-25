@@ -96,21 +96,4 @@ export function initGlass(root = document) {
   if (!forts.length) return;
   injectFilters();
   forts.forEach(bindJelly);
-
-  // выбранный форт остаётся «под стеклом»; карточки с историей в макете пока нет —
-  // событие fort:select пригодится, когда она появится
-  root.addEventListener("click", (e) => {
-    const fort = e.target.closest(".fort");
-    if (!fort) return;
-    const wasActive = fort.classList.contains("is-active");
-    forts.forEach((f) => {
-      f.classList.remove("is-active");
-      f.setAttribute("aria-pressed", "false");
-    });
-    if (!wasActive) {
-      fort.classList.add("is-active");
-      fort.setAttribute("aria-pressed", "true");
-    }
-    fort.dispatchEvent(new CustomEvent("fort:select", { bubbles: true, detail: { fort: fort.dataset.fort, active: !wasActive } }));
-  });
 }

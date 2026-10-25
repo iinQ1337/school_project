@@ -47,18 +47,21 @@
             />
           </div>
 
-          <p class="hero__lead reveal">
-            Цитадель — только сердце крепости. Вокруг неё на <em>32 километра</em> тянулось
-            кольцо фортов, а перед Первой мировой начали строить второе. В
-            <em>августе 1915-го</em> почти все они были взорваны.
-          </p>
+          <!-- описание: оба абзаца в одном потоке — размер шрифта подгоняет main.js -->
+          <div class="hero__text">
+            <p class="hero__lead reveal">
+              Цитадель — только сердце крепости. Вокруг неё на <em>32 километра</em> тянулось
+              кольцо фортов, а перед Первой мировой начали строить второе. В
+              <em>августе 1915-го</em> почти все они были взорваны.
+            </p>
 
-          <p class="hero__lead hero__lead--more reveal">
-            Крепость заложили в <em>1836 году</em> прямо на месте старого Бреста — город снесли
-            и отстроили в двух километрах восточнее. Цитадель на острове между Бугом и
-            Мухавцом прикрыли Кобринское, Волынское и Тереспольское укрепления, а её кольцевая
-            казарма вмещала <em>12 тысяч солдат</em>.
-          </p>
+            <p class="hero__lead hero__lead--more reveal">
+              Крепость заложили в <em>1836 году</em> прямо на месте старого Бреста — город снесли
+              и отстроили в двух километрах восточнее. Цитадель на острове между Бугом и
+              Мухавцом прикрыли Кобринское, Волынское и Тереспольское укрепления, а её кольцевая
+              казарма вмещала <em>12 тысяч солдат</em>.
+            </p>
+          </div>
 
           <p class="hero__caption reveal">
             Холмские ворота цитадели, 1847 · следы боёв 1941 года · Источник: brick-library.ru
@@ -106,15 +109,18 @@
               <img src="/assets/map-crop.png" alt="" width="1276" height="1286" />
             </div>
 
-            <!-- Component 1 (41:614): стеклянные метки; координаты — центр метки на карте 826×832 -->
+            <!-- Component 1 (41:614): стеклянные метки фортов I–IX (у подписей старой карты); координаты — центр метки
+                 на карте 826×832. Каждая ведёт на страницу форта -->
             <div class="forts__markers">
-              <button class="fort" type="button" data-fort="1" aria-label="Форт на карте" style="--mx: 573.3px; --my: 334.4px; --a: -19.23deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
-              <button class="fort" type="button" data-fort="2" aria-label="Форт на карте" style="--mx: 592.3px; --my: 443.2px; --a: 106.61deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
-              <button class="fort" type="button" data-fort="3" aria-label="Форт на карте" style="--mx: 414.7px; --my: 523.1px; --a: 157.33deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
-              <button class="fort" type="button" data-fort="4" aria-label="Форт на карте" style="--mx: 299.6px; --my: 507.8px; --a: -123.79deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
-              <button class="fort" type="button" data-fort="5" aria-label="Форт на карте" style="--mx: 263.8px; --my: 419.6px; --a: 71.62deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
-              <button class="fort" type="button" data-fort="6" aria-label="Форт на карте" style="--mx: 378.7px; --my: 326.3px; --a: 141.74deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
-              <button class="fort" type="button" data-fort="7" aria-label="Форт на карте" style="--mx: 545.2px; --my: 280.6px; --a: 41.1deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <a class="fort" href="fort/?n=1" data-fort="1" aria-label="Форт I — история" style="--mx: 332.5px; --my: 233px; --a: -58deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=2" data-fort="2" aria-label="Форт II — история" style="--mx: 470px; --my: 225px; --a: 24deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=3" data-fort="3" aria-label="Форт III — история" style="--mx: 573.3px; --my: 334.4px; --a: -19.23deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=4" data-fort="4" aria-label="Форт IV — история" style="--mx: 592.3px; --my: 443.2px; --a: 106.61deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=5" data-fort="5" aria-label="Форт V — история" style="--mx: 414.7px; --my: 523.1px; --a: 157.33deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=6" data-fort="6" aria-label="Форт VI — история" style="--mx: 299.6px; --my: 507.8px; --a: -123.79deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=7" data-fort="7" aria-label="Форт VII — история" style="--mx: 263.8px; --my: 419.6px; --a: 71.62deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=8" data-fort="8" aria-label="Форт VIII — история" style="--mx: 378.7px; --my: 326.3px; --a: 141.74deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
+              <a class="fort" href="fort/?n=9" data-fort="9" aria-label="Форт IX — история" style="--mx: 545.2px; --my: 280.6px; --a: 41.1deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
             </div>
 
             <figcaption>

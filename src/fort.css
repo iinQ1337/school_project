@@ -1,0 +1,419 @@
+/*
+ * Страница форта (fort/) — одна на все девять фортов. Сцена 1440×1080, как у
+ * экранов главной; стиль — как у «первого кольца»: бумага, сетка колонок,
+ * фото под скотчем. Слева — номер, история и «сейчас», справа — фото и цифры,
+ * внизу — переключатель I–IX.
+ */
+
+.fort-body {
+  background: var(--color-paper);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.fort-page {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.fort-page__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+}
+
+.fort-page em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* «90–100 %» и подобное не рвём по тире */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ---------- Левая колонка: номер, история, «сейчас» ----------
+   Высота фиксирована — кегль текстов подгоняет fort-page.js, чтобы всё влезло */
+
+.fort-page__col--text {
+  position: absolute;
+  left: 0;
+  top: 132px;
+  width: 610px;
+  height: 830px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fort-page__col--text > * {
+  flex: none;
+}
+
+.fort-page__kicker,
+.fort-page__place {
+  margin: 0;
+  font-family: var(--font-hand);
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.fort-page__kicker span,
+.fort-page__place span {
+  display: inline-block;
+}
+
+.fort-page__kicker {
+  font-size: 44px;
+  color: var(--color-accent);
+}
+
+.fort-page__kicker span {
+  transform: rotate(-3deg);
+}
+
+.fort-page__title {
+  margin: -6px 0 0;
+  font: inherit;
+}
+
+/* номер как «1878» на экране первого кольца */
+.fort-page__numeral {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 200px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--display-wdth);
+  line-height: 0.92;
+  letter-spacing: 4px;
+  white-space: nowrap;
+}
+
+.fort-page__place {
+  margin-top: 4px;
+  font-size: 48px;
+  color: var(--color-nav);
+}
+
+.fort-page__place span {
+  transform: rotate(-2deg);
+}
+
+.fort-page__history,
+.fort-page__now-text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fort-text-size, 22px);
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" 125;
+  letter-spacing: 0.03em;
+  line-height: 1.36;
+}
+
+.fort-page__history {
+  margin-top: 26px;
+}
+
+.fort-page__now {
+  margin-top: 26px;
+}
+
+.fort-page__now-title {
+  margin: 0 0 4px;
+  font-family: var(--font-hand);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-accent);
+}
+
+.fort-page__now-text {
+  color: #464646;
+}
+
+/* ---------- Правая колонка: фото под скотчем и цифры ---------- */
+
+.fort-page__col--media {
+  position: absolute;
+  left: 730px;
+  top: 158px;
+  width: 710px;
+}
+
+.fort-page__card {
+  position: relative;
+  margin: 0;
+}
+
+.fort-page__photo {
+  position: relative;
+  height: 440px;
+  overflow: hidden;
+  border-radius: 25px;
+  background: #e2ded9;
+  box-shadow: -6px 15px 18px rgba(0, 0, 0, 0.12);
+  transform: rotate(0.8deg);
+}
+
+/* фото разных лет и камер — в одном архивном ч/б, как табличка форта «А» */
+.fort-page__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+}
+
+/* чертёж показываем целиком, на белом */
+.fort-page__photo.is-contain {
+  background: #fff;
+}
+
+.fort-page__photo.is-contain img {
+  inset: 28px;
+  width: calc(100% - 56px);
+  height: calc(100% - 56px);
+  object-fit: contain;
+  filter: none;
+}
+
+.fort-page__tape {
+  position: absolute;
+  top: -58px;
+  width: 210px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.fort-page__tape img {
+  flex: none;
+  width: 200px;
+  height: auto;
+  max-width: none;
+}
+
+.fort-page__tape--left {
+  left: -72px;
+}
+
+.fort-page__tape--left img {
+  transform: rotate(-42deg);
+}
+
+.fort-page__tape--right {
+  right: -72px;
+}
+
+.fort-page__tape--right img {
+  transform: rotate(-127deg) scaleY(-1);
+}
+
+.fort-page__credit,
+.fort-page__source {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" 125;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  color: var(--color-muted);
+}
+
+.fort-page__credit {
+  margin-top: 18px;
+}
+
+.fort-page__credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fort-page__credit a:hover,
+.fort-page__credit a:focus-visible {
+  color: var(--color-accent);
+}
+
+/* три цифры: значение слева, подпись справа */
+.fort-page__facts {
+  margin: 34px 0 0;
+}
+
+.fort-fact {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  align-items: baseline;
+  column-gap: 20px;
+}
+
+.fort-fact + .fort-fact {
+  margin-top: 10px;
+}
+
+.fort-fact__value {
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" 120;
+  font-variant-numeric: proportional-nums;
+  line-height: 1.15;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.fort-fact__label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" 125;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+}
+
+.fort-page__source {
+  position: absolute;
+  left: 730px;
+  top: 940px;
+  width: 710px;
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ---------- Низ: «к карте» и переключатель I–IX ---------- */
+
+.fort-page__switch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 990px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.fort-page__back {
+  font-family: var(--font-hand);
+  font-size: 36px;
+  line-height: normal;
+  color: var(--color-nav);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.fort-page__list {
+  display: flex;
+  gap: 26px;
+}
+
+.fort-page__link {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--display-wdth);
+  line-height: normal;
+  color: #b2aca6;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.fort-page__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transition: transform 0.35s var(--ease-out);
+}
+
+.fort-page__back:hover,
+.fort-page__back:focus-visible,
+.fort-page__link:hover,
+.fort-page__link:focus-visible,
+.fort-page__link.is-active {
+  color: var(--color-accent);
+}
+
+.fort-page__link.is-active::after {
+  transform: scaleX(1);
+}
+
+.fort-page__back:focus-visible,
+.fort-page__link:focus-visible {
+  outline: none;
+}
+
+/* ---------- Появление и смена форта ----------
+ * fort-page.js ставит .is-entering после загрузки шрифтов и после каждой смены;
+ * перед сменой — .is-leaving: старое содержимое уходит вверх.
+ */
+
+@keyframes fort-in {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+    filter: blur(6px);
+  }
+}
+
+.fort-page__head {
+  --d: 0s;
+}
+.fort-page__history {
+  --d: 0.08s;
+}
+.fort-page__now {
+  --d: 0.16s;
+}
+.fort-page__card {
+  --d: 0.06s;
+}
+.fort-fact:nth-child(1) {
+  --d: 0.18s;
+}
+.fort-fact:nth-child(2) {
+  --d: 0.24s;
+}
+.fort-fact:nth-child(3) {
+  --d: 0.3s;
+}
+
+.js .fort-page:not(.is-entering) :is(.fort-page__head, .fort-page__history, .fort-page__now, .fort-page__card, .fort-fact) {
+  opacity: 0;
+}
+
+.fort-page.is-entering :is(.fort-page__head, .fort-page__history, .fort-page__now, .fort-page__card, .fort-fact) {
+  animation: fort-in 0.8s var(--ease-out) var(--d) both;
+}
+
+.fort-page.is-leaving :is(.fort-page__head, .fort-page__history, .fort-page__now, .fort-page__card, .fort-fact) {
+  opacity: 0;
+  translate: 0 -16px;
+  animation: none;
+  transition:
+    opacity 0.2s ease-in,
+    translate 0.2s ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fort-page.is-entering :is(.fort-page__head, .fort-page__history, .fort-page__now, .fort-page__card, .fort-fact) {
+    animation: none;
+  }
+}
