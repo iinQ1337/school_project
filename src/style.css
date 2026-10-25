@@ -1,0 +1,1688 @@
+/*
+ * Макет: Figma «main», фреймы 1920×1080. Рабочая область — 1440px по центру
+ * (по 240px полей). Все координаты ниже — в пикселях этой рабочей области,
+ * т.е. x_figma − 240.
+ */
+
+:root {
+  --color-bg: #101010;
+  --color-paper: #f2f0ef;
+  --color-text: #ffffff;
+  --color-ink: #191919;
+  --color-muted: #7e7e7e;
+  --color-nav: #464646;
+  --color-accent: #b94632;
+
+  --font-display: "Roboto Flex", "SF Pro", system-ui, sans-serif;
+  --font-hand: "Caveat", cursive;
+
+  /* SF Pro Expanded в Figma → Roboto Flex с подобранной шириной (wdth) */
+  --display-wdth: 140;
+  --display-wght: 900;
+  --display-tracking: 0px;
+  --body-wdth: 151;
+  --body-wght: 410;
+  /* подобрано по Figma: ширина подписи 806px, переносы абзацев как в макете */
+  --body-tracking: 1.34px;
+  --lead-tracking: 1.65px;
+  --ring-tracking: 1.3px;
+  --fact-value-wdth: 132;
+  --fact-unit-tracking: -2.6px;
+  --fact-label-tracking: -0.9px;
+  --chronicle-tracking: 1px;
+  --blast-tracking: 1.3px;
+  --blast-year-wdth: 143;
+  --defense-tracking: 1.1px;
+  --defense-big-wdth: 145;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --stage-w: 1440px;
+  --stage-h: 1080px;
+  /* выставляются из JS (stage.js): масштаб, при котором сцена влезает в окно,
+     отступ сцены от верха экрана и высота экрана — ровно высота окна */
+  --stage-scale: 1;
+  --stage-top: 0px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* с JS страницы листает scroll.js — своя анимация, нативная плавность ей мешала бы */
+html:not(.js) {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* выделение запрещено на всей странице; картинки не перетаскиваются */
+html {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+/* кастомный курсор — картонная стрелка, хотспот в острие. Везде, включая ссылки
+   и кнопки (без «руки» и I-beam). Значения без var(): иначе браузер без
+   image-set() не откатился бы на url(), а сбросил курсор на системный */
+html {
+  cursor: url("/assets/cursor.png") 1 1, auto;
+  cursor: -webkit-image-set(url("/assets/cursor.png") 1x, url("/assets/cursor@2x.png") 2x) 1 1, auto;
+  cursor: image-set(url("/assets/cursor.png") 1x, url("/assets/cursor@2x.png") 2x) 1 1, auto;
+}
+
+* {
+  cursor: inherit;
+}
+
+/* на интерактивном — та же стрелка, наклонённая вокруг острия */
+a[href],
+button {
+  cursor: url("/assets/cursor-hover.png") 0 1, auto;
+  cursor: -webkit-image-set(url("/assets/cursor-hover.png") 1x, url("/assets/cursor-hover@2x.png") 2x) 0 1, auto;
+  cursor: image-set(url("/assets/cursor-hover.png") 1x, url("/assets/cursor-hover@2x.png") 2x) 0 1, auto;
+}
+
+a[href] *,
+button * {
+  cursor: inherit;
+}
+
+/* ---------- Экран на всё окно со сценой 1440×1080 по центру ---------- */
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: var(--screen-h, calc(var(--stage-h) * var(--stage-scale)));
+  overflow: hidden;
+}
+
+.screen__stage {
+  position: absolute;
+  top: var(--stage-top);
+  left: 50%;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  transform: translateX(-50%) scale(var(--stage-scale));
+  transform-origin: top center;
+}
+
+/* ---------- Навигация (Group 39 / 38) — закреплена, одна на все экраны ---------- */
+
+.site-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  height: 0;
+}
+
+.site-nav__stage {
+  position: absolute;
+  z-index: 1; /* над подложкой ::before/::after */
+  top: var(--stage-top);
+  left: 50%;
+  width: var(--stage-w);
+  height: 110px;
+  transform: translateX(-50%) scale(var(--stage-scale));
+  transform-origin: top center;
+  pointer-events: none;
+}
+
+/* подложка: сплошная до низа надписей (110px), к 150px растворяется.
+   Два слоя — тёмный и светлый — переключаются по data-theme (scroll.js) */
+.site-nav::before,
+.site-nav::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(var(--stage-top) + 150px * var(--stage-scale));
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.site-nav::before {
+  background: linear-gradient(to bottom, var(--color-bg) 73%, rgba(16, 16, 16, 0));
+}
+
+.site-nav::after {
+  background: linear-gradient(to bottom, var(--color-paper) 73%, rgba(242, 240, 239, 0));
+  opacity: 0;
+}
+
+.site-nav[data-theme="light"]::before {
+  opacity: 0;
+}
+
+.site-nav[data-theme="light"]::after {
+  opacity: 1;
+}
+
+.site-nav__link {
+  position: absolute;
+  top: 60px;
+  transform: translateX(-50%);
+  font-family: var(--font-hand);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 50px;
+  color: var(--color-nav);
+  text-decoration: none;
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: color 0.25s ease;
+}
+
+.site-nav__link:hover,
+.site-nav__link:focus-visible,
+.site-nav__link.is-active {
+  color: var(--color-accent);
+}
+
+.site-nav__link--1 {
+  left: 136.5px;
+}
+.site-nav__link--2 {
+  left: 427px;
+}
+.site-nav__link--3 {
+  left: 720.5px;
+}
+.site-nav__link--4 {
+  left: 1011.5px;
+}
+.site-nav__link--5 {
+  left: 1303.5px;
+}
+
+/* ---------- Стрелка вниз (down-arrow-sm) — закреплена внизу экрана ---------- */
+
+.scroll-down {
+  position: fixed;
+  left: 50%;
+  /* в макете стрелка на 22px выше нижнего края фрейма */
+  bottom: calc(var(--stage-top) + 22px * var(--stage-scale));
+  z-index: 20;
+  /* масштабируется со сценой, иначе на маленьком экране наезжает на нижние тексты */
+  width: max(16px, calc(24px * var(--stage-scale)));
+  height: max(16px, calc(24px * var(--stage-scale)));
+  padding: 0;
+  border: 0;
+  background: none;
+  transform: translateX(-50%);
+  /* белая на тёмном экране, тёмная на светлом */
+  mix-blend-mode: difference;
+  transition: opacity 0.35s ease;
+}
+
+/* на последней странице листать некуда */
+.scroll-down.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-down img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Экран 1: цитадель (Frame 1) ---------- */
+
+.hero {
+  background: var(--color-bg);
+}
+
+/* Заголовок: три строки — отдельные слои (36:505, 36:506, 36:508) */
+.hero__title {
+  margin: 0;
+  font: inherit;
+}
+
+.hero__line {
+  position: absolute;
+  left: 0;
+  display: block;
+  font-family: var(--font-display);
+  font-size: 96px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--display-wdth);
+  letter-spacing: var(--display-tracking);
+  line-height: 115px;
+  color: var(--color-text);
+  white-space: nowrap;
+  /* маска: при появлении строка выезжает снизу */
+  overflow: hidden;
+}
+
+.hero__line-inner {
+  display: block;
+}
+
+.hero__line--1 {
+  top: 241px;
+  z-index: 1;
+}
+
+.hero__line--2 {
+  top: 356px;
+  z-index: 2;
+}
+
+/* «image 6» (36:507) лежит между 2-й и 3-й строкой заголовка */
+.hero__photo {
+  position: absolute;
+  left: 399px;
+  top: 230px;
+  z-index: 3;
+  width: 1041px;
+  height: 747px;
+  overflow: hidden;
+  pointer-events: none;
+  /* в макете слой отражён по горизонтали (rotate 180 + flipY) */
+  transform: scaleX(-1);
+}
+
+.hero__photo img {
+  position: absolute;
+  top: 0;
+  left: -0.02%;
+  width: 100.03%;
+  height: 104.55%;
+  max-width: none;
+  display: block;
+}
+
+.hero__line--3 {
+  top: 471px;
+  z-index: 4;
+}
+
+/* Лид (36:515) */
+.hero__lead,
+.hero__caption {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--body-tracking);
+  line-height: 19px;
+  color: var(--color-muted);
+}
+
+.hero__lead {
+  left: 0;
+  top: 612px;
+  z-index: 6;
+  width: 455px;
+  letter-spacing: var(--lead-tracking);
+}
+
+/* второй абзац истории — под лидом, отступ 24px как между абзацами в макете;
+   уже лида, потому что ниже фото ворот выступает влево (руина башни с x ≈ 645) */
+.hero__lead--more {
+  top: 731px;
+  width: 390px;
+}
+
+.hero__lead em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* Подпись к фото (36:516) */
+.hero__caption {
+  left: 630px;
+  top: 992px;
+  z-index: 7;
+  white-space: nowrap;
+}
+
+/* ---------- Экран 2: первое кольцо (Frame 2, 41:587) ---------- */
+
+.ring {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* Group 22 — колонки сетки */
+.ring__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+}
+
+.ring__intro p {
+  position: absolute;
+  margin: 0;
+}
+
+/* «1878» (41:602): центр подписи на x = 435 во фрейме */
+.ring__year {
+  left: 195px;
+  top: 174px;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 128px;
+  font-weight: var(--display-wght);
+  /* цифры Roboto Flex шире, чем у SF Pro: при 128 ширина «1878» = 390px, как в макете */
+  font-variation-settings: "wdth" 128;
+  line-height: 153px;
+  white-space: nowrap;
+}
+
+/* «начало» (41:603) */
+.ring__label {
+  left: 73px;
+  top: 296px;
+  width: 146px;
+  transform: translateX(-50%);
+  font-family: var(--font-hand);
+  font-size: 64px;
+  line-height: normal;
+  text-align: center;
+  color: var(--color-accent);
+}
+
+.ring__text {
+  left: 0;
+  width: 656px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--ring-tracking);
+  line-height: 38px;
+}
+
+.ring__text em,
+.forts__hint em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.ring__text--1 {
+  top: 397px;
+}
+
+.ring__text--2 {
+  top: 725px;
+}
+
+/* Frame 9 (41:607): карта со скотчем */
+.forts {
+  position: absolute;
+  left: 707px;
+  top: 125px;
+  width: 834.287px;
+  height: 880px;
+  margin: 0;
+}
+
+.forts__map {
+  position: absolute;
+  left: 0;
+  top: 48px;
+  width: 826px;
+  height: 832px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.forts__tape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.forts__tape img {
+  flex: none;
+  max-width: none;
+  object-fit: cover;
+}
+
+/* image 13 (41:609) */
+.forts__tape--right {
+  left: 472px;
+  top: 22px;
+  width: 362.287px;
+  height: 376.765px;
+}
+
+.forts__tape--right img {
+  width: 301.495px;
+  height: 225.96px;
+  transform: rotate(-127.21deg) scaleY(-1);
+}
+
+/* image 12 (41:610) */
+.forts__tape--left {
+  left: 1px;
+  top: 0;
+  width: 386.426px;
+  height: 381.898px;
+}
+
+.forts__tape--left img {
+  width: 310.808px;
+  height: 232.939px;
+  transform: rotate(-42.64deg);
+}
+
+/* rapidograph 2 (41:611) — заплатка поверх карты */
+.forts__patch {
+  position: absolute;
+  left: 592px;
+  top: 668px;
+  width: 158px;
+  height: 102px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.forts__patch img {
+  position: absolute;
+  left: -374.05%;
+  top: -607.09%;
+  width: 522.78%;
+  height: 816.15%;
+  max-width: none;
+}
+
+.forts__hint,
+.forts__source {
+  position: absolute;
+  top: 828px;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--body-tracking);
+  line-height: 19px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.forts__hint {
+  left: 220px;
+}
+
+.forts__source {
+  left: 590px;
+}
+
+.forts__markers {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- Метки фортов: стекло (Component 1) ----------
+ * В покое — как в макете: матовая капсула, сквозь которую карта видна синей
+ * (синяя копия карты выровнена по основной). При наведении — liquid glass:
+ * линза увеличивает карту, по краю преломляет (SVG-фильтр из glass.js), капсула
+ * пружинит и тянется за курсором, блик бежит за указателем.
+ */
+
+.fort {
+  --s: 1;
+  --zoom: 1;
+  position: absolute;
+  left: var(--mx);
+  top: calc(var(--my) + 48px);
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fort:focus-visible {
+  outline: none;
+}
+
+.fort__body {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(var(--jx, 0px), var(--jy, 0px))
+    scale(calc(var(--s) + var(--stx, 0)), calc(var(--s) + var(--sty, 0)));
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.fort__glass {
+  position: absolute;
+  left: -23.778px;
+  top: -17.58px;
+  width: 47.556px;
+  height: 35.159px;
+  border-radius: 86px;
+  overflow: hidden;
+  transform: rotate(var(--a));
+  box-shadow:
+    0 4px 4px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 0.75px rgba(255, 255, 255, 0.55);
+  transition: box-shadow 0.4s ease;
+}
+
+.fort__lens {
+  position: absolute;
+  inset: 0;
+}
+
+.glass-ready .fort__lens {
+  filter: url(#fort-refract-rest);
+}
+
+/* синяя карта: поворачиваем обратно, чтобы совпала с основной */
+.fort__map {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(calc(-1 * var(--a))) scale(var(--zoom));
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.fort__map img {
+  position: absolute;
+  left: calc(-1 * var(--mx));
+  top: calc(-1 * var(--my));
+  width: 826px;
+  height: 832px;
+  max-width: none;
+  object-fit: cover;
+  opacity: 0.75;
+  filter: blur(0.4px);
+  transition:
+    opacity 0.4s ease,
+    filter 0.4s ease;
+}
+
+/* ballpoint 3: голубой слой в режиме color, 20% */
+.fort__tint {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: bottom;
+  mix-blend-mode: color;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.fort__shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 1px 1.5px 1.5px -0.5px rgba(255, 255, 255, 0.85),
+    inset -1px -1.5px 2px -1px rgba(255, 255, 255, 0.45);
+  transition: background 0.4s ease;
+}
+
+/* блик в экранных координатах: поворачиваем обратно и двигаем за курсором */
+.fort__shine::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80px;
+  height: 80px;
+  margin: -40px 0 0 -40px;
+  transform: rotate(calc(-1 * var(--a)));
+  background: radial-gradient(
+    circle at calc(32% + var(--hx, 0) * 22%) calc(26% + var(--hy, 0) * 22%),
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0) 30%
+  );
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+
+.fort:is(:hover, :focus-visible, .is-active) {
+  --s: 1.35;
+  --zoom: 1.7;
+  z-index: 2;
+}
+
+.fort:is(:hover, :focus-visible, .is-active) .fort__glass {
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 0.75px rgba(255, 255, 255, 0.8);
+}
+
+.glass-ready .fort:is(:hover, :focus-visible, .is-active) .fort__lens {
+  filter: url(#fort-refract-hover);
+}
+
+.fort:is(:hover, :focus-visible, .is-active) .fort__map img {
+  opacity: 1;
+  filter: none;
+}
+
+.fort:is(:hover, :focus-visible, .is-active) .fort__shine {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fort:is(:hover, :focus-visible, .is-active) .fort__shine::before {
+  opacity: 1;
+}
+
+/* ---------- Появление при загрузке ----------
+ * html.intro ставит инлайн-скрипт в <head>, html.is-ready — main.js после загрузки
+ * шрифтов. До этого анимации стоят на паузе в первом кадре (элементы скрыты).
+ * После появления main.js снимает .intro — дальше тексты ведёт скролл (.reveal).
+ */
+
+@keyframes intro-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+    translate: 0 var(--intro-shift, 14px);
+  }
+}
+
+@keyframes intro-photo {
+  from {
+    opacity: 0;
+    transform: translateY(48px) scale(1.04);
+  }
+}
+
+.intro .hero__line-inner {
+  animation: intro-rise 1.1s var(--ease-out) var(--intro-delay, 0s) both paused;
+}
+
+.intro .site-nav__link,
+.intro .hero__lead,
+.intro .hero__caption,
+.intro .scroll-down {
+  animation: intro-fade 0.9s var(--ease-out) var(--intro-delay, 0s) both paused;
+}
+
+.intro .hero__photo img {
+  animation: intro-photo 1.6s var(--ease-out) var(--intro-delay, 0s) both paused;
+}
+
+.intro.is-ready .hero__line-inner,
+.intro.is-ready .site-nav__link,
+.intro.is-ready .hero__lead,
+.intro.is-ready .hero__caption,
+.intro.is-ready .scroll-down,
+.intro.is-ready .hero__photo img {
+  animation-play-state: running;
+}
+
+/* очерёдность: меню → заголовок и фото → тексты → стрелка */
+.site-nav__link {
+  --intro-shift: -14px;
+}
+.site-nav__link--1 {
+  --intro-delay: 0.15s;
+}
+.site-nav__link--2 {
+  --intro-delay: 0.21s;
+}
+.site-nav__link--3 {
+  --intro-delay: 0.27s;
+}
+.site-nav__link--4 {
+  --intro-delay: 0.33s;
+}
+.site-nav__link--5 {
+  --intro-delay: 0.39s;
+}
+.hero__line--1 .hero__line-inner {
+  --intro-delay: 0.25s;
+}
+.hero__line--2 .hero__line-inner {
+  --intro-delay: 0.37s;
+}
+.hero__line--3 .hero__line-inner {
+  --intro-delay: 0.49s;
+}
+.hero__photo img {
+  --intro-delay: 0.35s;
+}
+.hero__lead {
+  --intro-delay: 0.75s;
+}
+.hero__lead--more {
+  --intro-delay: 0.85s;
+}
+.hero__caption {
+  --intro-delay: 0.95s;
+}
+.scroll-down {
+  --intro-delay: 1.1s;
+}
+
+/* ---------- Тексты при скролле ----------
+ * main.js ставит .is-inview, пока элемент на экране, и .is-above, если он ушёл
+ * вверх, — тогда текст уезжает вверх, а при возврате выезжает с той же стороны.
+ */
+
+.js .reveal {
+  transition:
+    opacity 0.8s var(--ease-out) var(--reveal-delay, 0s),
+    translate 1s var(--ease-out) var(--reveal-delay, 0s),
+    filter 0.8s var(--ease-out) var(--reveal-delay, 0s);
+}
+
+.js .reveal:not(.is-inview) {
+  opacity: 0;
+  translate: 0 var(--reveal-shift, 48px);
+  filter: blur(6px);
+  transition:
+    opacity 0.45s ease-in,
+    translate 0.6s ease-in,
+    filter 0.45s ease-in;
+}
+
+.js .reveal.is-above:not(.is-inview) {
+  --reveal-shift: -48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .intro .hero__line-inner,
+  .intro .site-nav__link,
+  .intro .hero__lead,
+  .intro .hero__caption,
+  .intro .scroll-down,
+  .intro .hero__photo img {
+    animation: none;
+  }
+
+  .js .reveal:not(.is-inview) {
+    opacity: 1;
+    translate: none;
+    filter: none;
+  }
+
+  .fort__body,
+  .fort__map {
+    transition: none;
+  }
+}
+
+/* ---------- Экран 3: литерные форты (Frame 4, 42:645) ---------- */
+
+.letters {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* подложка цвета бумаги внутри слоя стейджа: без неё difference у чертежа
+   смешивался бы с пустотой (стейдж — отдельный слой из-за transform) */
+.letters .screen__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 -1200px;
+  background: var(--color-paper);
+}
+
+/* image 2 (42:646): чертёж форта, difference 7% */
+.letters__plan {
+  position: absolute;
+  left: -267px;
+  top: 40px;
+  width: 1662px;
+  height: 1108px;
+  max-width: none;
+  object-fit: cover;
+  mix-blend-mode: difference;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.letters__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+}
+
+/* Frame 4 (42:670): карточка с фото */
+.letters__photo {
+  position: absolute;
+  left: 0;
+  top: 177px;
+  width: 1440px;
+  height: 435px;
+  margin: 0;
+}
+
+/* обрезка — на отдельной обёртке: подпись не должна попадать под неё,
+   иначе в скрытом состоянии (.reveal) она уезжает за край и не «видна» наблюдателю */
+.letters__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 25px;
+  background: #fff;
+}
+
+.letters__frame img {
+  position: absolute;
+  left: -27px;
+  top: -396px;
+  width: 1494px;
+  height: 1120px;
+  max-width: none;
+}
+
+.letters__source {
+  position: absolute;
+  left: 1268px;
+  top: 398px;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--body-tracking);
+  line-height: 19px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* Group 40–42: цифры */
+.letters__facts {
+  margin: 0;
+}
+
+.fact__value,
+.fact__unit,
+.fact__label {
+  position: absolute;
+  margin: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.fact__value {
+  top: 682px;
+  font-family: var(--font-display);
+  font-size: 164px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--fact-value-wdth);
+  /* как в SF Pro: узкая «1» */
+  font-variant-numeric: proportional-nums;
+  line-height: 196px;
+  /* числа выровнены по левому краю рамок макета, а не по центру */
+  transform: none;
+  color: var(--color-accent);
+}
+
+.fact__unit {
+  top: 838px;
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--display-wdth);
+  letter-spacing: var(--fact-unit-tracking);
+  line-height: 76px;
+  color: var(--color-accent);
+}
+
+/* подпись с маркером списка, как list-disc в макете: маркер в отступе 36px */
+.fact__label {
+  top: 914px;
+  padding-left: 36px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--fact-label-tracking);
+  line-height: 29px;
+  color: #000;
+}
+
+.fact__label::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* центры подписей — из макета (x_figma − 240) */
+/* у SF Pro цифры 4 и 5 широкие — для «45» берём максимальную ширину Roboto Flex,
+   контур совпадает с макетом (261px) */
+.fact--length .fact__value {
+  left: 41px;
+  font-variation-settings: "wdth" 151;
+}
+.fact--length .fact__unit {
+  left: 324px;
+}
+.fact--length .fact__label {
+  left: 209px;
+}
+.fact--forts .fact__value {
+  left: 497px;
+}
+.fact--forts .fact__unit {
+  left: 781px;
+}
+.fact--forts .fact__label {
+  left: 598.5px;
+}
+/* «1911» у Roboto Flex чуть уже — добираем до 419px макета трекингом */
+.fact--year .fact__value {
+  top: 680px;
+  left: 973px;
+  letter-spacing: 3.63px;
+}
+.fact--year .fact__label {
+  left: 1120.5px;
+}
+
+/* ---------- Экран 4: хроника 1911–1915 (Frame 5, 45:679) ---------- */
+
+.chronicle {
+  background: var(--color-bg);
+}
+
+/* Group 45 + Line 23: линии во всю ширину окна (в макете — по ширине фрейма 1920).
+   Общий класс: так же рисуется нижняя линия экрана «1915» */
+.rules span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--stage-top) + var(--y) * 1px * var(--stage-scale));
+  height: 1px;
+  background: #252525;
+}
+
+.chronicle__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* строки не позиционированы: годы, тексты и ППШ лежат в одном слое стейджа,
+   и z-index повторяет порядок макета — текст, поверх ППШ, поверх годы */
+.chronicle__text {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  width: 1234px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--chronicle-tracking);
+  line-height: 29px;
+  text-align: right;
+  color: #b7b7b7;
+}
+
+.chronicle__text em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.chronicle__year {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: var(--display-wght);
+  /* оптический размер как у крупных заголовков — иначе на 32px цифры заметно уже SF Pro */
+  font-variation-settings: "wdth" 140, "opsz" 144;
+  font-variant-numeric: proportional-nums;
+  line-height: 38px;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.chronicle__row--1911 .chronicle__year {
+  left: 41px;
+  top: 251px;
+}
+.chronicle__row--1911 .chronicle__text {
+  top: 241px;
+  right: 5px;
+  width: 1114px;
+}
+.chronicle__row--1912 .chronicle__year {
+  left: 44.5px;
+  top: 431px;
+}
+.chronicle__row--1912 .chronicle__text {
+  top: 406px;
+}
+.chronicle__row--1913 .chronicle__year {
+  left: 45.5px;
+  top: 611px;
+}
+.chronicle__row--1913 .chronicle__text {
+  top: 601px;
+  right: 6px;
+}
+.chronicle__row--1914 .chronicle__year {
+  left: 45.5px;
+  top: 791px;
+}
+.chronicle__row--1914 .chronicle__text {
+  top: 737px;
+}
+.chronicle__row--1915 .chronicle__year {
+  left: 45px;
+  top: 971px;
+}
+.chronicle__row--1915 .chronicle__text {
+  top: 946px;
+}
+
+/* image 22 (45:701) */
+.chronicle__gun {
+  position: absolute;
+  z-index: 2;
+  left: -619px;
+  top: 772px;
+  width: 1074.471px;
+  height: 557.657px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.chronicle__gun img {
+  flex: none;
+  width: 1024px;
+  height: 401px;
+  max-width: none;
+  object-fit: cover;
+  transform: rotate(170.92deg) scaleY(-1);
+}
+
+/* ---------- Экран 5: 1915, взорвать и уйти (Frame 6, 46:710) ---------- */
+
+.blast {
+  background: var(--color-bg);
+}
+
+/* 46:711: контурная «1915» во весь экран — первый слой */
+.blast__ghost {
+  position: absolute;
+  left: 961.5px;
+  top: 295px;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 641px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--blast-year-wdth);
+  font-variant-numeric: proportional-nums;
+  line-height: 765px;
+  white-space: nowrap;
+  /* в макете — обводка 3px снаружи, #191919. Снаружи-only в CSS: обводка 6px
+     под заливкой цвета фона (paint-order), внутренняя половина закрывается */
+  color: var(--color-bg);
+  -webkit-text-stroke: 6px #191919;
+  paint-order: stroke fill;
+  pointer-events: none;
+}
+
+/* 46:720: подзаголовок от руки, повёрнут на −4.59° */
+.blast__title {
+  position: absolute;
+  left: 159.65px;
+  top: 185px;
+  width: 371.304px;
+  height: 110.002px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+  font-family: var(--font-hand);
+  font-size: 64px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.blast__title span {
+  flex: none;
+  transform: rotate(-4.59deg);
+}
+
+.blast__text {
+  position: absolute;
+  left: 0;
+  width: 710px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--blast-tracking);
+  line-height: 29px;
+  color: #b7b7b7;
+}
+
+.blast__text em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.blast__text--1 {
+  top: 344px;
+}
+.blast__text--2 {
+  top: 573px;
+}
+.blast__text--3 {
+  top: 773px;
+}
+
+/* Frame 11 / Frame 12: фото на листах рваной бумаги */
+.blast__card {
+  position: absolute;
+  margin: 0;
+}
+
+.blast__card--aerial {
+  left: 908px;
+  top: 607px;
+  width: 551px;
+  height: 398px;
+}
+
+.blast__card--ruins {
+  left: 841px;
+  top: 140px;
+  width: 649px;
+  height: 428px;
+}
+
+.blast__paper {
+  position: absolute;
+  max-width: none;
+  /* тень по форме рваного листа, а не по прямоугольнику картинки */
+  filter: drop-shadow(-6px 15px 7.9px rgba(0, 0, 0, 0.14));
+  pointer-events: none;
+}
+
+.blast__paper--a1 {
+  left: -15px;
+  top: -19px;
+  width: 446px;
+  height: 446px;
+  object-fit: cover;
+}
+.blast__paper--a2 {
+  left: 136px;
+  top: -22px;
+  width: 446px;
+  height: 446px;
+  object-fit: cover;
+}
+.blast__paper--b {
+  left: 203px;
+  top: 21px;
+  width: 446px;
+  height: 407px;
+}
+.blast__paper--c {
+  left: 52px;
+  top: 26px;
+  width: 446px;
+  height: 402px;
+}
+
+.blast__photo {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 25px;
+}
+
+/* image 16 */
+.blast__photo--aerial {
+  left: 50px;
+  top: 43px;
+  width: 466px;
+  height: 311px;
+}
+
+.blast__photo--aerial img {
+  position: absolute;
+  top: 0;
+  left: -0.03%;
+  width: 100.06%;
+  height: 105.79%;
+  max-width: none;
+}
+
+/* Frame 7 + image 15 */
+.blast__photo--ruins {
+  left: 116px;
+  top: 77px;
+  width: 467px;
+  height: 311px;
+}
+
+.blast__photo--ruins img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* «1915»: красная видна только внутри фото (обрезает Frame 7), белый контур — поверх */
+.blast__year {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 128px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--blast-year-wdth);
+  font-variant-numeric: proportional-nums;
+  line-height: 153px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.blast__year--fill {
+  left: 63.5px;
+  top: -77px;
+  color: var(--color-accent);
+}
+
+.blast__year--outline {
+  left: 179.5px;
+  top: 0;
+  color: transparent;
+  /* в макете 3px снаружи; здесь заливки нет (видно фото), поэтому 3px по контуру */
+  -webkit-text-stroke: 3px #fff;
+}
+
+.blast__source {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--body-tracking);
+  line-height: 19px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.blast__source--aerial {
+  left: 178px;
+  top: 385px;
+}
+
+.blast__source--ruins {
+  left: 1151px;
+  top: 584px;
+}
+
+/* ---------- Экран 6: 1941, 32 дня (Frame 7, 51:40) ---------- */
+
+.defense {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.defense__grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+}
+
+.defense__label,
+.defense__days {
+  position: absolute;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+  font-family: var(--font-hand);
+  line-height: normal;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.defense__label span,
+.defense__days span {
+  flex: none;
+}
+
+/* 54:56 — «оборона, 1941», −3° */
+.defense__label {
+  left: 156.91px;
+  top: 133.78px;
+  width: 313.814px;
+  height: 97.113px;
+  font-size: 64px;
+}
+
+.defense__label span {
+  transform: rotate(-3deg);
+}
+
+/* 54:57 — «32» */
+.defense__big {
+  position: absolute;
+  left: 276.5px;
+  top: 196px;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 340px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--defense-big-wdth);
+  font-variant-numeric: proportional-nums;
+  line-height: 406px;
+  white-space: nowrap;
+}
+
+/* 54:58 — «дня», −6° */
+.defense__days {
+  left: 605.03px;
+  top: 408.01px;
+  width: 120.056px;
+  height: 131.626px;
+  font-size: 96px;
+}
+
+.defense__days span {
+  transform: rotate(-6deg);
+}
+
+.defense__text {
+  position: absolute;
+  left: 0;
+  width: 640px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--defense-tracking);
+  line-height: 29px;
+}
+
+.defense__text em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.defense__text {
+  top: 610px;
+}
+
+/* подсказка, как у карты фортов: «жми на форт…» */
+.defense__hint {
+  position: absolute;
+  left: 0;
+  top: 816px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: var(--body-tracking);
+  line-height: 19px;
+  color: var(--color-muted);
+}
+
+.defense__hint em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* 54:64 — «июнь — июль» */
+.defense__month {
+  position: absolute;
+  left: 817px;
+  top: 140px;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-hand);
+  font-size: 40px;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+/* 54:65 — календарь: 8 колонок по 80px, зазор 8px */
+.defense__calendar {
+  position: absolute;
+  left: 744px;
+  top: 206px;
+  width: 696px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Calendar/Day (54:61) */
+.day {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  border: 1px solid #c7c3bf;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  text-align: left;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.35s var(--ease-spring);
+}
+
+.day__num {
+  position: absolute;
+  left: 11px;
+  top: 7px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: 0.054em;
+  line-height: normal;
+}
+
+.day__month {
+  position: absolute;
+  left: 11px;
+  top: 45px;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  line-height: normal;
+  color: var(--color-muted);
+  transition: color 0.25s ease;
+}
+
+.day--key {
+  border-color: transparent;
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.day--key .day__month {
+  color: #fff;
+}
+
+.day:not(:has(.day__month)) .day__num {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.day:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+}
+
+.day:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-paper), 0 0 0 5px var(--color-ink);
+}
+
+/* выбранный день: обычный — тёмный, ключевой — с кольцом */
+.day.is-selected {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: #fff;
+}
+
+.day.is-selected .day__month {
+  color: #cfcfcf;
+}
+
+.day--key.is-selected {
+  border-color: transparent;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-paper), 0 0 0 5px var(--color-accent);
+}
+
+/* сводка выбранного дня — под календарём, без рамки */
+.defense__report {
+  position: absolute;
+  left: 744px;
+  top: 600px;
+  width: 696px;
+  height: 400px;
+}
+
+.report__body {
+  animation: report-in 0.45s var(--ease-out);
+}
+
+@keyframes report-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+.report__head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.report__date {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: var(--display-wght);
+  font-variation-settings: "wdth" var(--display-wdth);
+  line-height: normal;
+  color: var(--color-accent);
+}
+
+.report__day {
+  font-family: var(--font-hand);
+  font-size: 28px;
+  line-height: normal;
+  color: var(--color-muted);
+}
+
+.report__title {
+  margin: 10px 0 12px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: 0.04em;
+  line-height: normal;
+}
+
+.report__text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: 0.04em;
+  line-height: 26px;
+  color: #464646;
+}
+
+.report__source {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: var(--body-wght);
+  font-variation-settings: "wdth" var(--body-wdth);
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .report__body {
+    animation: none;
+  }
+
+  .day {
+    transition: none;
+  }
+}

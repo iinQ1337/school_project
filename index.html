@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Форты Брестской крепости</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+    <!-- без JS контент виден сразу; с JS — прячется до анимации появления -->
+    <script>
+      document.documentElement.classList.add("js", "intro");
+    </script>
+  </head>
+  <body>
+    <!-- Навигация одинакова на всех экранах макета (меняется только активный пункт) — закреплена сверху -->
+    <header class="site-nav">
+      <nav class="site-nav__stage" aria-label="Разделы">
+        <a class="site-nav__link site-nav__link--1 is-active" href="#citadel" aria-current="true">цитадель</a>
+        <a class="site-nav__link site-nav__link--2" href="#first-ring">первое кольцо</a>
+        <a class="site-nav__link site-nav__link--3" href="#letter-forts">литерные форты</a>
+        <a class="site-nav__link site-nav__link--4" href="#y1915">1915</a>
+        <a class="site-nav__link site-nav__link--5" href="#y1941">1941</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Figma: main / Frame 1 (36:504). Слои идут в том же порядке, что и в макете — z-index повторяет глубину. -->
+      <section class="screen hero" id="citadel" data-nav="citadel" data-theme="dark">
+        <div class="screen__stage">
+          <h1 class="hero__title">
+            <span class="hero__line hero__line--1 reveal"><span class="hero__line-inner">ФОРТЫ </span></span>
+            <span class="hero__line hero__line--2 reveal"><span class="hero__line-inner">БРЕСТСКОЙ</span></span>
+            <span class="hero__line hero__line--3 reveal"><span class="hero__line-inner">КРЕПОСТИ</span></span>
+          </h1>
+
+          <div class="hero__photo">
+            <img
+              src="/assets/kholm-gate.png"
+              alt="Холмские ворота цитадели Брестской крепости"
+              width="1448"
+              height="1086"
+            />
+          </div>
+
+          <p class="hero__lead reveal">
+            Цитадель — только сердце крепости. Вокруг неё на <em>32 километра</em> тянулось
+            кольцо фортов, а перед Первой мировой начали строить второе. В
+            <em>августе 1915-го</em> почти все они были взорваны.
+          </p>
+
+          <p class="hero__lead hero__lead--more reveal">
+            Крепость заложили в <em>1836 году</em> прямо на месте старого Бреста — город снесли
+            и отстроили в двух километрах восточнее. Цитадель на острове между Бугом и
+            Мухавцом прикрыли Кобринское, Волынское и Тереспольское укрепления, а её кольцевая
+            казарма вмещала <em>12 тысяч солдат</em>.
+          </p>
+
+          <p class="hero__caption reveal">
+            Холмские ворота цитадели, 1847 · следы боёв 1941 года · Источник: brick-library.ru
+          </p>
+        </div>
+      </section>
+
+      <!-- Figma: main / Frame 2 (41:587) — первое кольцо фортов -->
+      <section class="screen ring" id="first-ring" data-nav="first-ring" data-theme="light">
+        <div class="screen__stage">
+          <img class="ring__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
+
+          <div class="ring__intro">
+            <p class="ring__year reveal">1878</p>
+            <p class="ring__label reveal" style="--reveal-delay: 0.08s">начало</p>
+            <p class="ring__text ring__text--1 reveal" style="--reveal-delay: 0.16s">
+              В 1878–1888 годах вокруг крепости построили <em>девять</em> кирпично-земляных
+              <em>фортов в 3–4 км от цитадели.</em> Каждый форт — пятиугольник с рвом, валом,
+              казармой-капониром и пороховыми погребами, <em>рассчитанный на</em> гарнизон в
+              <em>250 человек.</em>
+            </p>
+            <p class="ring__text ring__text--2 reveal" style="--reveal-delay: 0.24s">
+              <em>Кольцо отодвигало линию осады</em> от города: <em>артиллерия</em> противника
+              больше <em>не могла обстреливать</em> цитадель напрямую. Форты нумеровались
+              римскими цифрами — от I до IX — по часовой стрелке, начиная с северо-запада.
+            </p>
+          </div>
+
+          <!-- Frame 9 (41:607): карта на рваной бумаге, скотч и метки фортов -->
+          <figure class="forts">
+            <img
+              class="forts__map"
+              src="/assets/forts-map.png"
+              alt="Карта фортов Брест-Литовской крепости"
+              width="1276"
+              height="1286"
+            />
+            <div class="forts__tape forts__tape--right">
+              <img src="/assets/tape.png" alt="" width="467" height="350" />
+            </div>
+            <div class="forts__tape forts__tape--left">
+              <img src="/assets/tape.png" alt="" width="467" height="350" />
+            </div>
+            <div class="forts__patch">
+              <img src="/assets/map-crop.png" alt="" width="1276" height="1286" />
+            </div>
+
+            <!-- Component 1 (41:614): стеклянные метки; координаты — центр метки на карте 826×832 -->
+            <div class="forts__markers">
+              <button class="fort" type="button" data-fort="1" aria-label="Форт на карте" style="--mx: 573.3px; --my: 334.4px; --a: -19.23deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <button class="fort" type="button" data-fort="2" aria-label="Форт на карте" style="--mx: 592.3px; --my: 443.2px; --a: 106.61deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <button class="fort" type="button" data-fort="3" aria-label="Форт на карте" style="--mx: 414.7px; --my: 523.1px; --a: 157.33deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <button class="fort" type="button" data-fort="4" aria-label="Форт на карте" style="--mx: 299.6px; --my: 507.8px; --a: -123.79deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <button class="fort" type="button" data-fort="5" aria-label="Форт на карте" style="--mx: 263.8px; --my: 419.6px; --a: 71.62deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <button class="fort" type="button" data-fort="6" aria-label="Форт на карте" style="--mx: 378.7px; --my: 326.3px; --a: 141.74deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+              <button class="fort" type="button" data-fort="7" aria-label="Форт на карте" style="--mx: 545.2px; --my: 280.6px; --a: 41.1deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></button>
+            </div>
+
+            <figcaption>
+              <p class="forts__hint reveal"><em>жми на форт</em> чтобы узнать его историю</p>
+              <p class="forts__source reveal">источник: gcbs-brest.by</p>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Figma: main / Frame 4 (42:645) — литерные форты, второе кольцо -->
+      <section class="screen letters" id="letter-forts" data-nav="letter-forts" data-theme="light">
+        <div class="screen__stage">
+          <img class="letters__plan" src="/assets/fort-plan.png" alt="" width="1536" height="1024" />
+          <img class="letters__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
+
+          <!-- Frame 4 (42:670): фото таблички на форте «А» -->
+          <figure class="letters__photo">
+            <div class="letters__frame">
+              <img
+                src="/assets/fort-a-plaque.png"
+                alt="Табличка на форте «А»: 1912–1915, охраняется государством"
+                width="1024"
+                height="768"
+              />
+            </div>
+            <figcaption class="letters__source reveal">источник: brest-forts.narod.ru</figcaption>
+          </figure>
+
+          <!-- Group 40–42: цифры второго кольца -->
+          <dl class="letters__facts">
+            <div class="fact fact--length">
+              <dt class="fact__label reveal" style="--reveal-delay: 0.2s">длина оборонительного кольца</dt>
+              <dd class="fact__value reveal">45</dd>
+              <dd class="fact__unit reveal" style="--reveal-delay: 0.1s">км</dd>
+            </div>
+            <div class="fact fact--forts">
+              <dt class="fact__label reveal" style="--reveal-delay: 0.3s">второго кольца</dt>
+              <dd class="fact__value reveal" style="--reveal-delay: 0.1s">11</dd>
+              <dd class="fact__unit reveal" style="--reveal-delay: 0.2s">фортов</dd>
+            </div>
+            <div class="fact fact--year">
+              <dt class="fact__label reveal" style="--reveal-delay: 0.4s">начало строительства</dt>
+              <dd class="fact__value reveal" style="--reveal-delay: 0.2s">1911</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- Figma: main / Frame 5 (45:679) — хроника строительства второго кольца, 1911–1915 -->
+      <section class="screen chronicle" id="chronicle" data-nav="letter-forts" data-theme="dark">
+        <!-- Group 45 + Line 23: разделители строк во всю ширину окна -->
+        <div class="rules" aria-hidden="true">
+          <span style="--y: 180"></span>
+          <span style="--y: 360"></span>
+          <span style="--y: 540"></span>
+          <span style="--y: 720"></span>
+          <span style="--y: 900"></span>
+          <span style="--y: 1079"></span>
+        </div>
+
+        <div class="screen__stage">
+          <ol class="chronicle__list">
+            <li class="chronicle__row chronicle__row--1911">
+              <h2 class="chronicle__year reveal">1911</h2>
+              <p class="chronicle__text reveal" style="--reveal-delay: 0.08s">
+                <em>30 июня</em> Инженерный комитет Главного инженерного управления
+                <em>одобрил генеральный план</em> развития крепости, рассчитанный на десять лет.
+              </p>
+            </li>
+            <li class="chronicle__row chronicle__row--1912">
+              <h2 class="chronicle__year reveal">1912</h2>
+              <p class="chronicle__text reveal" style="--reveal-delay: 0.08s">
+                План утвердил комитет Генерального штаба. <em>Обвод крепости увеличивался до 45</em>
+                км, а новая линия фортов (литеры А-О) создавалась в 6-7 км от центра. Ежегодно на
+                работы планировали около 2 млн рублей. <em>В 1912 году начали строить форт</em> “А”
+                и ряд других.
+              </p>
+            </li>
+            <li class="chronicle__row chronicle__row--1913">
+              <h2 class="chronicle__year reveal">1913</h2>
+              <p class="chronicle__text reveal" style="--reveal-delay: 0.08s">
+                Полномасштабное строительство второго кольца началось летом. В проектировании
+                участвовал Дмитрий Карбышев
+              </p>
+            </li>
+            <li class="chronicle__row chronicle__row--1914">
+              <h2 class="chronicle__year reveal">1914</h2>
+              <p class="chronicle__text reveal" style="--reveal-delay: 0.08s">
+                С началом войны работы шли круглосуточно, без выходных. Ежедневно
+                <em>трудились около 70 тысяч рабочих</em> и мастеровых и 8,5 тысячи подвод.
+                Достраивали 5 ранее начатых фортов, добавляли опорные пункты.
+                <em>5 ноября взрыв склада</em> боеприпасов <em>унёс около 200 жизней.</em> К октябрю
+                форты, опорные пункты и казармы практически достроили, среднее расстояние между
+                укреплениями составляло<em> около 1 км.</em>
+              </p>
+            </li>
+            <li class="chronicle__row chronicle__row--1915">
+              <h2 class="chronicle__year reveal">1915</h2>
+              <p class="chronicle__text reveal" style="--reveal-delay: 0.08s">
+                Весной инженеры начали возводить полевые укрепления в 10 и более километрах от
+                крепости. <em>В ночь на 1 (13) августа</em> <em>крепость оставили и частично взорвали.</em>
+                Не все форты были закончены: форт З, вероятно, построили лишь на треть.
+              </p>
+            </li>
+          </ol>
+
+          <!-- image 22 (45:701): ППШ в левом нижнем углу, под годами -->
+          <div class="chronicle__gun" aria-hidden="true">
+            <img src="/assets/gun.png" alt="" width="1024" height="401" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Figma: main / Frame 6 (46:710) — 1915: взорвать и уйти -->
+      <section class="screen blast" id="y1915" data-nav="y1915" data-theme="dark">
+        <div class="rules" aria-hidden="true">
+          <span style="--y: 1079"></span>
+        </div>
+
+        <div class="screen__stage">
+          <!-- 46:711: огромная контурная «1915» за всем -->
+          <p class="blast__ghost" aria-hidden="true">1915</p>
+
+          <!-- Group 52 -->
+          <h2 class="blast__title reveal"><span>&nbsp;Взорвать и уйти</span></h2>
+          <p class="blast__text blast__text--1 reveal" style="--reveal-delay: 0.08s">
+            <em>Весной 1915</em> года инженеры начали возводить полевые укрепления в 10 и более
+            километрах от крепости. Строили спешно, с небольшим числом бетонных убежищ. Но
+            <em>летом</em> австро-германские войска стали обходить Брест. Чтобы не попасть в
+            окружение, русское командование <em>приказало</em> гарнизону <em>уйти.</em>
+          </p>
+          <p class="blast__text blast__text--2 reveal" style="--reveal-delay: 0.16s">
+            В <em>ночь </em>на <em>13 августа</em> (1 августа по старому стилю) <em>крепость</em>
+            оставили и <em>частично взорвали.</em> Казаки и ополченцы разрушили почти весь город:
+            <em>около 80% зданий.</em> На форте К противнику не достались даже свежие бетонные
+            работы: цемент уничтожили.
+          </p>
+          <p class="blast__text blast__text--3 reveal" style="--reveal-delay: 0.24s">
+            Многие форты второго кольца <em>так и остались недостроенными:</em> форт З успели
+            возвести только на треть.
+          </p>
+
+          <!-- Frame 12 (46:725): форт с воздуха на двух листах бумаги -->
+          <figure class="blast__card blast__card--aerial">
+            <img class="blast__paper blast__paper--a1" src="/assets/paper-frame-a.png" alt="" width="1024" height="1024" />
+            <img class="blast__paper blast__paper--a2" src="/assets/paper-frame-a.png" alt="" width="1024" height="1024" />
+            <div class="blast__photo blast__photo--aerial">
+              <img src="/assets/photo-fort-aerial.png" alt="Форт второго кольца, вид с воздуха" width="1080" height="762" />
+            </div>
+            <figcaption class="blast__source blast__source--aerial reveal">источник: starcom68.livejournal.com</figcaption>
+          </figure>
+
+          <!-- Frame 11 (46:732): разрушенный Брест; «1915» красная внутри фото, контурная — поверх -->
+          <figure class="blast__card blast__card--ruins">
+            <img class="blast__paper blast__paper--b" src="/assets/paper-frame-b.png" alt="" width="1024" height="1024" />
+            <img class="blast__paper blast__paper--c" src="/assets/paper-frame-c.png" alt="" width="1024" height="1024" />
+            <div class="blast__photo blast__photo--ruins">
+              <img src="/assets/photo-brest-ruins.png" alt="Разрушенный Брест-Литовск, 1915" width="600" height="400" />
+              <span class="blast__year blast__year--fill" aria-hidden="true">1915</span>
+            </div>
+            <span class="blast__year blast__year--outline" aria-hidden="true">1915</span>
+          </figure>
+          <p class="blast__source blast__source--ruins reveal">источник: www.bel-jurist.com</p>
+        </div>
+      </section>
+
+      <!-- Figma: main / Frame 7 (51:40) — 1941: 32 дня обороны. Календарь, легенду и сводку рисует defense1941-ui.js -->
+      <section class="screen defense" id="y1941" data-nav="y1941" data-theme="light">
+        <div class="screen__stage">
+          <img class="defense__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
+
+          <p class="defense__label reveal"><span>оборона, 1941</span></p>
+          <h2 class="defense__big reveal">32</h2>
+          <p class="defense__days reveal" style="--reveal-delay: 0.1s"><span>дня</span></p>
+
+          <p class="defense__text reveal" style="--reveal-delay: 0.08s">
+            Штурм начался <em>22 июня в 04:23</em>. Организованная оборона продержалась около недели,
+            но отдельные бойцы сражались в развалинах <em>ещё месяц</em> — майор Пётр Гаврилов
+            попал в плен лишь 23 июля, <em>на 32-й день войны.</em>
+          </p>
+          <p class="defense__hint reveal" style="--reveal-delay: 0.16s"><em>жми на дату</em> — что происходило в этот день</p>
+
+          <p class="defense__month reveal">июнь — июль</p>
+          <div class="defense__calendar reveal" role="group" aria-label="Дни обороны: 22 июня — 23 июля 1941" style="--reveal-delay: 0.08s"></div>
+          <article class="defense__report reveal" aria-live="polite" style="--reveal-delay: 0.16s"></article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Стрелка вниз (down-arrow-sm) — закреплена внизу экрана; цвет инвертируется под фон -->
+    <button class="scroll-down" type="button" aria-label="Листать вниз">
+      <img src="/assets/down-arrow-sm.svg" alt="" width="24" height="24" />
+    </button>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
