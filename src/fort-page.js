@@ -1,18 +1,11 @@
-/*
- * Страница форта (fort/?n=1…9) — одна на все девять фортов первого кольца.
- * Содержимое берётся из forts.js; переключение между фортами — без перезагрузки,
- * с записью в историю (кнопки «назад/вперёд» браузера работают).
- */
-
 import { FORTS } from "./forts.js";
 import { updateStage } from "./stage.js";
 
-// фото лежат в src/assets/forts — Vite подставит правильные пути и при относительном base
 const PHOTOS = import.meta.glob("./assets/forts/*.jpg", { eager: true, import: "default" });
 const photoUrl = (file) => PHOTOS[`./assets/forts/${file}`];
 
-const SWITCH_OUT_MS = 220; // старое содержимое уходит, затем появляется новое
-const TEXT_SIZES = { max: 22, min: 16, step: 0.5 }; // кегль истории и «сейчас», px сцены
+const SWITCH_OUT_MS = 220; 
+const TEXT_SIZES = { max: 22, min: 16, step: 0.5 }; 
 
 const page = document.querySelector(".fort-page");
 const field = (name) => page.querySelector(`[data-field="${name}"]`);
@@ -28,7 +21,6 @@ const indexFromUrl = () => {
 
 let current = indexFromUrl();
 
-// список I–IX внизу страницы
 const list = field("list");
 const links = FORTS.map((fort, i) => {
   const a = document.createElement("a");
@@ -40,8 +32,6 @@ const links = FORTS.map((fort, i) => {
   return a;
 });
 
-// Текстовая колонка: самый крупный кегль, при котором история и «сейчас»
-// помещаются в колонку. Тексты у фортов разной длины — подгоняем каждый раз
 function fitText() {
   const col = page.querySelector(".fort-page__col--text");
   for (let size = TEXT_SIZES.max; size >= TEXT_SIZES.min; size -= TEXT_SIZES.step) {
@@ -89,7 +79,6 @@ function show(i, { push = true } = {}) {
   setTimeout(() => {
     render(i);
     page.classList.remove("is-leaving");
-    // перезапуск анимации появления
     page.classList.remove("is-entering");
     void page.offsetWidth;
     page.classList.add("is-entering");
@@ -98,12 +87,12 @@ function show(i, { push = true } = {}) {
 
 list.addEventListener("click", (e) => {
   const a = e.target.closest(".fort-page__link");
-  if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return; // новая вкладка — браузеру
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return; 
   e.preventDefault();
   show(links.indexOf(a));
 });
 
-// ←/→ — соседний форт
+
 window.addEventListener("keydown", (e) => {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
   const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];

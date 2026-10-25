@@ -5,14 +5,10 @@ import { updateStage } from "./stage.js";
 
 const root = document.documentElement;
 
-// до initScroll: его обработчики resize читают уже пересчитанный размер сцены
 updateStage();
 window.addEventListener("resize", updateStage);
 
-// Описание на первом экране: самый крупный кегль, при котором оба абзаца
-// заканчиваются над нижним краем сцены. Меряем в координатах сцены, поэтому
-// от размера окна результат не зависит — только от шрифта: перемеряем, когда он загрузится
-const HERO_TEXT_BOTTOM = 1040; // px сцены 1440×1080
+const HERO_TEXT_BOTTOM = 1040; 
 const HERO_TEXT_SIZES = { max: 22, min: 15, step: 0.5 };
 function fitHeroText() {
   const box = document.querySelector(".hero__text");
@@ -24,19 +20,14 @@ function fitHeroText() {
   }
 }
 fitHeroText();
-document.fonts?.ready.then(fitHeroText); // до initScroll: .reveal перемеряются после этого
+document.fonts?.ready.then(fitHeroText);
 
-initDefense1941(); // до initScroll: календарь и сводка должны быть в DOM, когда меряются .reveal
+initDefense1941(); 
 initScroll();
 initGlass();
 
-// выделение отключено в CSS; перетаскивание картинок — здесь (Firefox не знает -webkit-user-drag)
 document.addEventListener("dragstart", (e) => e.preventDefault());
 
-// ---------- Появление ----------
-// Ждём шрифты (не дольше 2 с), чтобы текст не прыгнул при подмене шрифта, затем
-// включаем CSS-анимации (html.is-ready). Когда всё появилось, снимаем .intro —
-// дальше тексты ведёт скролл.
 const INTRO_MS = 2100;
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const fontsReady = Promise.all([

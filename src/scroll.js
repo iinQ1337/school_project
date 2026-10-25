@@ -1,19 +1,8 @@
-/*
- * Скролл: постраничное листание, появление/исчезновение текстов, активный пункт
- * меню, стрелка вниз.
- */
-
 import { stage } from "./stage.js";
 
-// .reveal: пока элемент на экране — .is-inview; ушёл вверх — ещё и .is-above,
-// чтобы уехать вверх и вернуться сверху, а не снизу.
-// Видимость считаем по положению элемента в раскладке (offsetTop), а не по
-// getBoundingClientRect/IntersectionObserver: в скрытом состоянии текст сдвинут
-// на 48px, и у края экрана сдвиг выносил его из зоны — он так и не появлялся.
-const REVEAL_EDGE = 0.06; // доля окна сверху и снизу, где текст уже скрывается
+const REVEAL_EDGE = 0.06; 
 
 function stageOffset(el) {
-  // позиция в координатах стейджа 1440×1080 (без transform-ов)
   let top = 0;
   let node = el;
   while (node && !node.classList.contains("screen__stage")) {
@@ -56,7 +45,6 @@ function initReveal() {
     measure();
     request();
   });
-  // шрифты меняют высоту абзацев — перемеряем, когда загрузятся
   document.fonts?.ready.then(() => {
     measure();
     update();
@@ -65,7 +53,6 @@ function initReveal() {
   update();
 }
 
-// пункт меню подсвечивается, когда его экран пересекает середину окна
 function initNavSpy() {
   const links = new Map(
     [...document.querySelectorAll(".site-nav__link")].map((a) => [a.getAttribute("href").slice(1), a]),
@@ -88,14 +75,11 @@ function initNavSpy() {
   document.querySelectorAll("[data-nav]").forEach((s) => io.observe(s));
 }
 
-// меню закреплено всегда; подложка под ним берёт цвет экрана, который сейчас под
-// меню (data-theme), — текст не просвечивает сквозь пункты, а на месте экрана
-// подложка сливается с фоном, как во фреймах макета
 function initNavTheme() {
   const nav = document.querySelector(".site-nav");
   if (!nav) return;
   const screens = [...document.querySelectorAll(".screen")];
-  const PROBE_PX = 85; // середина строки меню (top 60 + 50 / 2)
+  const PROBE_PX = 85;
   let raf = 0;
   const update = () => {
     raf = 0;
@@ -117,13 +101,11 @@ function initNavTheme() {
   update();
 }
 
-// Постраничное листание: каждый экран — ровно высота окна, колесо, тачпад,
-// клавиши, свайп, пункты меню и стрелка вниз переводят на целую страницу.
 const PAGE_MS = 900;
-const WHEEL_THRESHOLD = 30; // px накопленной прокрутки, чтобы жест считался листанием
-const WHEEL_IDLE_MS = 180; // пауза в событиях колеса — конец жеста (и инерции тачпада)
+const WHEEL_THRESHOLD = 30; 
+const WHEEL_IDLE_MS = 180; 
 const SWIPE_PX = 50;
-const SETTLE_MS = 150; // после прокрутки ползунком/поиском — доводим до ближайшей страницы
+const SETTLE_MS = 150; 
 
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
@@ -173,15 +155,13 @@ function initPager() {
     raf = requestAnimationFrame(step);
   }
 
-  // колесо и тачпад: один жест — одна страница. Пока жест не закончился (события
-  // идут без паузы, в том числе инерция тачпада), следующую страницу не листаем
   let wheelSum = 0;
   let wheelSpent = false;
   let wheelTimer = 0;
   window.addEventListener(
     "wheel",
     (e) => {
-      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // зум и горизонталь — браузеру
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; 
       e.preventDefault();
       clearTimeout(wheelTimer);
       wheelTimer = setTimeout(() => {
@@ -189,7 +169,7 @@ function initPager() {
         wheelSpent = false;
       }, WHEEL_IDLE_MS);
       if (wheelSpent || animating) return;
-      wheelSum += e.deltaMode === 0 ? e.deltaY : e.deltaY * 40; // строки/страницы → px
+      wheelSum += e.deltaMode === 0 ? e.deltaY : e.deltaY * 40; 
       if (Math.abs(wheelSum) < WHEEL_THRESHOLD) return;
       wheelSpent = true;
       goTo(index + Math.sign(wheelSum));
@@ -197,7 +177,6 @@ function initPager() {
     { passive: false },
   );
 
-  // клавиши; стрелки внутри календаря 1941 он обрабатывает сам (defaultPrevented)
   window.addEventListener("keydown", (e) => {
     if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     if (e.target.closest?.("input, textarea, select, [contenteditable]")) return;
@@ -212,7 +191,7 @@ function initPager() {
         target = index - 1;
         break;
       case " ":
-        if (e.target.closest?.("button, a")) return; // пробел нажимает кнопку
+        if (e.target.closest?.("button, a")) return; 
         target = e.shiftKey ? index - 1 : index + 1;
         break;
       case "Home":
@@ -228,7 +207,6 @@ function initPager() {
     goTo(target);
   });
 
-  // свайп на сенсорных экранах
   let touchY = null;
   window.addEventListener(
     "touchstart",
@@ -251,7 +229,6 @@ function initPager() {
     if (Math.abs(dy) > SWIPE_PX) goTo(index + Math.sign(dy));
   });
 
-  // пункты меню и стрелка вниз листают той же анимацией
   document.querySelectorAll('.site-nav a[href^="#"]').forEach((a) => {
     const i = screens.findIndex((s) => s.id === a.hash.slice(1));
     if (i < 0) return;
@@ -262,8 +239,6 @@ function initPager() {
   });
   button?.addEventListener("click", () => goTo(index + 1));
 
-  // прокрутили мимо нас (ползунок, поиск по странице, фокус с Tab, восстановление
-  // позиции при перезагрузке) — доводим до ближайшей страницы
   let settleTimer = 0;
   window.addEventListener(
     "scroll",
@@ -277,14 +252,12 @@ function initPager() {
     { passive: true },
   );
 
-  // высота страницы меняется вместе с окном — остаёмся на той же странице
   window.addEventListener("resize", () => {
     cancelAnimationFrame(raf);
     animating = false;
     window.scrollTo(0, screens[index].offsetTop);
   });
 
-  // пришли по ссылке с якорем (например, «к карте фортов» со страницы форта) — на этот экран
   const fromHash = screens.findIndex((s) => s.id && `#${s.id}` === window.location.hash);
   setIndex(fromHash >= 0 ? fromHash : nearest());
   window.scrollTo(0, screens[index].offsetTop);

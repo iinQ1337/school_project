@@ -1,17 +1,7 @@
-/*
- * Liquid glass для меток фортов.
- *
- * Преломление: карта смещений для капсулы 47.556×35.159 (размер стекла из макета)
- * рисуется на canvas и подключается в SVG-фильтр feDisplacementMap. Чем ближе к краю
- * капсулы, тем сильнее карта под стеклом «затягивается» внутрь — как у толстой линзы.
- * Фильтр висит на .fort__lens, которая не повёрнута относительно стекла, поэтому
- * одна карта смещений подходит для всех меток.
- */
-
 const GLASS_W = 47.556;
 const GLASS_H = 35.159;
-const MAP_SCALE = 3; // разрешение карты смещений относительно css px
-const REFRACTION = { rest: 5, hover: 16 }; // px, сила преломления у края
+const MAP_SCALE = 3; 
+const REFRACTION = { rest: 5, hover: 16 }; 
 
 function buildDisplacementMap() {
   const w = Math.ceil(GLASS_W * MAP_SCALE);
@@ -27,7 +17,6 @@ function buildDisplacementMap() {
     for (let px = 0; px < w; px++) {
       const x = (px + 0.5) / MAP_SCALE;
       const y = (py + 0.5) / MAP_SCALE;
-      // ближайшая точка на средней линии капсулы
       const qx = Math.min(Math.max(x, r), GLASS_W - r);
       const vx = x - qx;
       const vy = y - r;
@@ -35,7 +24,7 @@ function buildDisplacementMap() {
       let dx = 0;
       let dy = 0;
       if (d > 0.0001 && d <= r) {
-        const t = Math.min(1, (r - d) / (r * 0.85)); // 0 у края, 1 в глубине
+        const t = Math.min(1, (r - d) / (r * 0.85)); 
         const m = (1 - t) ** 2.5;
         dx = (-vx / d) * m;
         dy = (-vy / d) * m;
@@ -71,7 +60,6 @@ function injectFilters() {
   document.documentElement.classList.add("glass-ready");
 }
 
-// капсула чуть тянется к курсору и сплющивается поперёк движения — «желе»
 function bindJelly(fort) {
   const set = (dx, dy) => {
     const ax = Math.abs(dx);

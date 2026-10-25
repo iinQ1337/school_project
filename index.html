@@ -11,13 +11,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/style.css" />
-    <!-- без JS контент виден сразу; с JS — прячется до анимации появления -->
     <script>
       document.documentElement.classList.add("js", "intro");
     </script>
   </head>
   <body>
-    <!-- Навигация одинакова на всех экранах макета (меняется только активный пункт) — закреплена сверху -->
     <header class="site-nav">
       <nav class="site-nav__stage" aria-label="Разделы">
         <a class="site-nav__link site-nav__link--1 is-active" href="#citadel" aria-current="true">цитадель</a>
@@ -29,7 +27,6 @@
     </header>
 
     <main>
-      <!-- Figma: main / Frame 1 (36:504). Слои идут в том же порядке, что и в макете — z-index повторяет глубину. -->
       <section class="screen hero" id="citadel" data-nav="citadel" data-theme="dark">
         <div class="screen__stage">
           <h1 class="hero__title">
@@ -47,7 +44,6 @@
             />
           </div>
 
-          <!-- описание: оба абзаца в одном потоке — размер шрифта подгоняет main.js -->
           <div class="hero__text">
             <p class="hero__lead reveal">
               Цитадель — только сердце крепости. Вокруг неё на <em>32 километра</em> тянулось
@@ -69,7 +65,6 @@
         </div>
       </section>
 
-      <!-- Figma: main / Frame 2 (41:587) — первое кольцо фортов -->
       <section class="screen ring" id="first-ring" data-nav="first-ring" data-theme="light">
         <div class="screen__stage">
           <img class="ring__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
@@ -90,7 +85,6 @@
             </p>
           </div>
 
-          <!-- Frame 9 (41:607): карта на рваной бумаге, скотч и метки фортов -->
           <figure class="forts">
             <img
               class="forts__map"
@@ -109,8 +103,6 @@
               <img src="/assets/map-crop.png" alt="" width="1276" height="1286" />
             </div>
 
-            <!-- Component 1 (41:614): стеклянные метки фортов I–IX (у подписей старой карты); координаты — центр метки
-                 на карте 826×832. Каждая ведёт на страницу форта -->
             <div class="forts__markers">
               <a class="fort" href="fort/?n=1" data-fort="1" aria-label="Форт I — история" style="--mx: 332.5px; --my: 233px; --a: -58deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
               <a class="fort" href="fort/?n=2" data-fort="2" aria-label="Форт II — история" style="--mx: 470px; --my: 225px; --a: 24deg"><span class="fort__body"><span class="fort__glass"><span class="fort__lens"><span class="fort__map"><img src="/assets/marker-map.png" alt="" /></span></span><img class="fort__tint" src="/assets/marker-shadow.png" alt="" /><span class="fort__shine"></span></span></span></a>
@@ -131,13 +123,11 @@
         </div>
       </section>
 
-      <!-- Figma: main / Frame 4 (42:645) — литерные форты, второе кольцо -->
       <section class="screen letters" id="letter-forts" data-nav="letter-forts" data-theme="light">
         <div class="screen__stage">
           <img class="letters__plan" src="/assets/fort-plan.png" alt="" width="1536" height="1024" />
           <img class="letters__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
 
-          <!-- Frame 4 (42:670): фото таблички на форте «А» -->
           <figure class="letters__photo">
             <div class="letters__frame">
               <img
@@ -150,7 +140,6 @@
             <figcaption class="letters__source reveal">источник: brest-forts.narod.ru</figcaption>
           </figure>
 
-          <!-- Group 40–42: цифры второго кольца -->
           <dl class="letters__facts">
             <div class="fact fact--length">
               <dt class="fact__label reveal" style="--reveal-delay: 0.2s">длина оборонительного кольца</dt>
@@ -170,9 +159,7 @@
         </div>
       </section>
 
-      <!-- Figma: main / Frame 5 (45:679) — хроника строительства второго кольца, 1911–1915 -->
       <section class="screen chronicle" id="chronicle" data-nav="letter-forts" data-theme="dark">
-        <!-- Group 45 + Line 23: разделители строк во всю ширину окна -->
         <div class="rules" aria-hidden="true">
           <span style="--y: 180"></span>
           <span style="--y: 360"></span>
@@ -228,24 +215,20 @@
             </li>
           </ol>
 
-          <!-- image 22 (45:701): ППШ в левом нижнем углу, под годами -->
           <div class="chronicle__gun" aria-hidden="true">
             <img src="/assets/gun.png" alt="" width="1024" height="401" />
           </div>
         </div>
       </section>
 
-      <!-- Figma: main / Frame 6 (46:710) — 1915: взорвать и уйти -->
       <section class="screen blast" id="y1915" data-nav="y1915" data-theme="dark">
         <div class="rules" aria-hidden="true">
           <span style="--y: 1079"></span>
         </div>
 
         <div class="screen__stage">
-          <!-- 46:711: огромная контурная «1915» за всем -->
           <p class="blast__ghost" aria-hidden="true">1915</p>
 
-          <!-- Group 52 -->
           <h2 class="blast__title reveal"><span>&nbsp;Взорвать и уйти</span></h2>
           <p class="blast__text blast__text--1 reveal" style="--reveal-delay: 0.08s">
             <em>Весной 1915</em> года инженеры начали возводить полевые укрепления в 10 и более
@@ -264,7 +247,6 @@
             возвести только на треть.
           </p>
 
-          <!-- Frame 12 (46:725): форт с воздуха на двух листах бумаги -->
           <figure class="blast__card blast__card--aerial">
             <img class="blast__paper blast__paper--a1" src="/assets/paper-frame-a.png" alt="" width="1024" height="1024" />
             <img class="blast__paper blast__paper--a2" src="/assets/paper-frame-a.png" alt="" width="1024" height="1024" />
@@ -274,7 +256,6 @@
             <figcaption class="blast__source blast__source--aerial reveal">источник: starcom68.livejournal.com</figcaption>
           </figure>
 
-          <!-- Frame 11 (46:732): разрушенный Брест; «1915» красная внутри фото, контурная — поверх -->
           <figure class="blast__card blast__card--ruins">
             <img class="blast__paper blast__paper--b" src="/assets/paper-frame-b.png" alt="" width="1024" height="1024" />
             <img class="blast__paper blast__paper--c" src="/assets/paper-frame-c.png" alt="" width="1024" height="1024" />
@@ -288,7 +269,6 @@
         </div>
       </section>
 
-      <!-- Figma: main / Frame 7 (51:40) — 1941: 32 дня обороны. Календарь, легенду и сводку рисует defense1941-ui.js -->
       <section class="screen defense" id="y1941" data-nav="y1941" data-theme="light">
         <div class="screen__stage">
           <img class="defense__grid" src="/assets/grid.svg" alt="" width="1441" height="1080" />
@@ -311,7 +291,6 @@
       </section>
     </main>
 
-    <!-- Стрелка вниз (down-arrow-sm) — закреплена внизу экрана; цвет инвертируется под фон -->
     <button class="scroll-down" type="button" aria-label="Листать вниз">
       <img src="/assets/down-arrow-sm.svg" alt="" width="24" height="24" />
     </button>

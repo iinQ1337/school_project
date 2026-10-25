@@ -1,10 +1,5 @@
 import { DAYS } from "./defense1941.js";
 
-/*
- * Экран «1941»: календарь 22.06–23.07 (Figma: компонент Calendar/Day)
- * и сводка выбранного дня. Даты кликабельны, стрелки листают.
- */
-
 const MONTH = { "06": "июнь", "07": "июль" };
 
 const ordinal = (n) => `${n}-й день войны`;
@@ -22,7 +17,6 @@ export function initDefense1941(root = document) {
     btn.className = "day" + (day.key ? " day--key" : "");
     btn.dataset.index = String(i);
     btn.setAttribute("aria-label", `${Number(d)} ${m === "06" ? "июня" : "июля"} — ${day.title}`);
-    // месяц подписан только у первого дня каждого месяца — меньше шума в сетке
     const firstOfMonth = i === 0 || d === "01";
     btn.innerHTML = `<span class="day__num">${Number(d)}</span>${firstOfMonth ? `<span class="day__month">${MONTH[m]}</span>` : ""}`;
     calendar.appendChild(btn);
